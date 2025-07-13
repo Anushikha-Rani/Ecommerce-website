@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Beauty & Fashion Ecommerce</title>
+  <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/simpleCart/3.0.6/simpleCart.min.js"></script>
+  <style>
+    :root {
+      --bg: #fff; --fg: #ff079c; --accent: #d6336c;
+      --nav-bg: rgb(255, 199, 227); --card-bg: #fafafa;
+    }
+    [data-theme="dark"] {
+      --bg: #121212; --fg: #e0e0e0; --accent: #e91e63;
+      --nav-bg: rgba(18,18,18,0.95); --card-bg: #1f1f1f;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Poppins',sans-serif; background:var(--bg); color:var(--fg);
+      line-height:1.6; transition:background .3s,color .3s; }
+    img { max-width:100%; display:block; border-radius:8px; }
+
+    nav {
+      position:sticky; top:0; z-index:999;
+      background:var(--nav-bg);
+      display:flex; justify-content:space-between; align-items:center;
+      padding:0.75rem 1rem;
+    }
+    nav .logo { font-size:1.25rem; font-weight:700; color:var(--accent); }
+    nav ul { display:flex; list-style:none; gap:1rem; }
+    nav ul li a { color:var(--fg); font-weight:500; text-decoration:none; transition:color .3s; }
+    nav ul li a:hover { color:var(--accent); }
+    .theme-toggle { font-size:1.25rem; cursor:pointer; color:var(--fg); }
+
+    #hero {
+      background:
+        linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),
+        url('hero.png') center/cover no-repeat;
+      color:#fff; text-align:center; padding:6rem 1rem;
+    }
+    #hero h4 { text-transform:uppercase; letter-spacing:2px; margin-bottom:0.5rem; }
+    #hero h2 { font-size:2.5rem; margin-bottom:0.5rem; }
+    #hero h1 { font-size:3rem; margin-bottom:1rem; }
+    #hero button {
+      background:var(--accent); color:#fff; padding:0.75rem 1.5rem;
+      border:none; border-radius:4px;
+      cursor:pointer; transition:filter .3s;
+    }
+    #hero button:hover { filter:brightness(0.9); }
+
+    .features {
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(120px,1fr));
+      gap:1rem; text-align:center; padding:2rem 1rem;
+    }
+    .features .box {
+      background:var(--card-bg); padding:1rem;
+      border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    #products { padding:2rem 1rem; }
+    .products {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:1rem;
+    }
+    .product-card { background:var(--card-bg); padding:1rem;
+      display:flex; flex-direction:column;
+      box-shadow:0 2px 4px rgba(0,0,0,0.1);
+      transition:transform .3s,box-shadow .3s;
+    }
+    .product-card:hover {
+      transform:translateY(-5px);
+      box-shadow:0 4px 8px rgba(0,0,0,0.15);
+    }
+    .product-card .title { font-weight:600; margin:0.5rem 0; }
+    .product-card .desc { flex:1; font-size:0.9rem; margin-bottom:0.5rem; }
+    .price-add { display:flex; justify-content:space-between; align-items:center; }
+    .price { font-weight:700; font-size:1.1rem; }
+    .add-btn { background:var(--accent); color:#fff; border:none;
+      padding:0.5rem; border-radius:4px; cursor:pointer; transition:filter .3s; }
+    .add-btn:hover { filter:brightness(0.9); }
+
+    .explore-more { text-align:center; margin:2rem 0; }
+    .explore-more button { background:var(--accent); color:#fff;
+      padding:0.75rem 1.5rem; border:none; border-radius:4px;
+      cursor:pointer; transition:filter .3s; }
+    .explore-more button:hover { filter:brightness(0.9); }
+
+    #about, #contact { background:var(--card-bg); padding:2rem 1rem; margin:2rem 0; border-radius:8px; }
+    #about h2, #contact h2 { text-align:center; margin-bottom:1rem; }
+
+    #contact form {
+      max-width:600px; margin:0 auto; display:flex; flex-direction:column; gap:0.75rem;
+    }
+    #contact input, #contact textarea {
+      padding:0.75rem; border:1px solid #ccc; border-radius:4px;
+    }
+    #contact button {
+      background:var(--accent); color:#fff; padding:0.75rem;
+      border:none; border-radius:4px; cursor:pointer; transition:filter .3s;
+    }
+    #contact button:hover { filter:brightness(0.9); }
+
+    .newsletter, .cart-bar, footer {
+      padding:1rem; text-align:center;
+    }
+    .newsletter { display:flex; justify-content:center; gap:0.5rem; margin:1rem 0; }
+    .newsletter input { flex:1; padding:0.5rem; border:1px solid #ccc; border-radius:4px; }
+    .newsletter button { background:var(--accent); color:#fff;
+      padding:0.5rem 1rem; border:none; border-radius:4px;
+      cursor:pointer; transition:filter .3s; }
+    .cart-bar {
+      position:fixed; bottom:0; right:0;
+      background:var(--accent); color:#fff;
+      padding:1rem; border-top-left-radius:8px;
+      display:flex; gap:1rem; align-items:center;
+    }
+
+    footer { background:var(--nav-bg); color:var(--fg); margin-top:2rem; }
+    footer p { margin:0.5rem 0; }
+
+    @media(max-width:768px){
+      #hero h1 { font-size:2.5rem; }
+      .features, .products { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav> 
+  <div class="logo">Beauty & Fashion</div>
+  <ul>
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#products">Shop</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="theme-toggle" id="themeToggle">🌙</div>
+</nav>
+
+
+<section id="hero">
+  <h4>Indian Drugstore Brands</h4>
+  <h2>Exciting Offers Trending Now</h2>
+  <h1>GOOO... & SHOP NOW</h1>
+  <button onclick="scrollToSection('products')">SHOP NOW</button>
+</section>
+
+<section class="features">
+  <div class="box"><img src="shipping.webp" alt=""><h6>Free Shipping</h6></div>
+  <div class="box"><img src="save.png" alt=""><h6>Save Money</h6></div>
+  <div class="box"><img src="ind.png" alt=""><h6>Made in India</h6></div>
+  <div class="box"><img src="fast.jpg" alt=""><h6>Fast Delivery</h6></div>
+  <div class="box"><img src="return.png" alt=""><h6>Easy Return</h6></div>
+</section>
+
+<section id="products">
+  <h2>Featured Products</h2>
+  <div class="products">
+    <!-- Primer -->
+    <div class="product-card simpleCart_shelfItem">
+      <img src="primer.jpg" class="simpleCart_image" alt="Primer">
+      <div class="title simpleCart_itemName">BLUE HEAVEN PRIMER</div>
+      <div class="desc">Perfect base, lightweight matte-finish.</div>
+      <div class="price-add">
+        <div class="price simpleCart_itemPrice">200</div>
+        <button class="add-btn simpleCart_add"><i class="fas fa-shopping-cart"></i></button>
+      </div>
+    </div>
+    <!-- Compact -->
+    <div class="product-card simpleCart_shelfItem">
+      <img src="comp.jpg" class="simpleCart_image" alt="Compact">
+      <div class="title simpleCart_itemName">LAKME FACE IT COMPACT</div>
+      <div class="desc">Light‑weight, smooth finish, 12h coverage.</div>
+      <div class="price-add">
+        <div class="price simpleCart_itemPrice">150</div>
+        <button class="add-btn simpleCart_add"><i class="fas fa-shopping-cart"></i></button>
+      </div>
+    </div>
+
+    <div class="product-card simpleCart_shelfItem">
+      <img src="maybeline.jpg" class="simpleCart_image" alt="Compact">
+      <div class="title simpleCart_itemName">MAYBELLINE FIT ME</div>
+      <div class="desc">Shade to suit every Indian skin tone,matte-finish,lightweight,comfortable on skin.</div>
+      <div class="price-add">
+        <div class="price simpleCart_itemPrice">300</div>
+        <button class="add-btn simpleCart_add"><i class="fas fa-shopping-cart"></i></button>
+      </div>
+    </div>
+
+    <div class="product-card simpleCart_shelfItem">
+      <img src="blush.jpg" class="simpleCart_image" alt="Compact">
+      <div class="title simpleCart_itemName"> BLUE HEAVEN KISS & BLUSH</div>
+      <div class="desc">Lip nad check tint</div>
+      <div class="price-add">
+        <div class="price simpleCart_itemPrice">150</div>
+        <button class="add-btn simpleCart_add"><i class="fas fa-shopping-cart"></i></button>
+      </div>
+    </div>
+
+
+    <div class="product-card simpleCart_shelfItem">
+      <img src="kajal.jpg" class="simpleCart_image" alt="Compact">
+      <div class="title simpleCart_itemName">MAMAEARTH CHARCOAL BLACK KAJAL</div>
+      <div class="desc">Black,waterproof and smudgeproof with vitamanC and chamomile.</div>
+      <div class="price-add">
+        <div class="price simpleCart_itemPrice">250</div>
+        <button class="add-btn simpleCart_add"><i class="fas fa-shopping-cart"></i></button>
+      </div>
+    </div>
+
+    <div class="product-card simpleCart_shelfItem">
+      <img src="mascara.jpg" class="simpleCart_image" alt="Compact">
+      <div class="title simpleCart_itemName">LAKME EYECONIC CURLING MASCARA</div>
+      <div class="desc">Waterproof,non organic mascara.</div>
+      <div class="price-add">
+        <div class="price simpleCart_itemPrice">350</div>
+        <button class="add-btn simpleCart_add"><i class="fas fa-shopping-cart"></i></button>
+      </div>
+    </div>
+
+    <div class="product-card simpleCart_shelfItem">
+      <img src="lip.jpg" class="simpleCart_image" alt="Compact">
+      <div class="title simpleCart_itemName">BLUE HEAVEN BULLET LIPSTICK</div>
+      <div class="desc">Smooth texture with long lasting effect.</div>
+      <div class="price-add">
+        <div class="price simpleCart_itemPrice">150</div>
+        <button class="add-btn simpleCart_add"><i class="fas fa-shopping-cart"></i></button>
+      </div>
+    </div>
+
+    <div class="product-card simpleCart_shelfItem">
+      <img src="high.jpg" class="simpleCart_image" alt="Compact">
+      <div class="title simpleCart_itemName">BLUE HEAVEN LIQUID HIGHLIGHTER</div>
+      <div class="desc">stays fresh for hrs enhance the party glow.</div>
+      <div class="price-add">
+        <div class="price simpleCart_itemPrice">200</div>
+        <button class="add-btn simpleCart_add"><i class="fas fa-shopping-cart"></i></button>
+      </div>
+    </div>
+
+    <div class="product-card simpleCart_shelfItem">
+      <img src="kajal.jpg" class="simpleCart_image" alt="Compact">
+      <div class="title simpleCart_itemName">LAKME EYECONIC LIQUID EYELINEAR</div>
+      <div class="desc">Smooth texture with long lasting effect.</div>
+      <div class="price-add">
+        <div class="price simpleCart_itemPrice">200</div>
+        <button class="add-btn simpleCart_add"><i class="fas fa-shopping-cart"></i></button>
+      </div>
+    </div>
+
+    <div class="product-card simpleCart_shelfItem">
+      <img src="lip.jpg" class="simpleCart_image" alt="Compact">
+      <div class="title simpleCart_itemName">BLUE HEAVEN BULLET LIPSTICK</div>
+      <div class="desc">Smooth texture with long lasting effect.</div>
+      <div class="price-add">
+        <div class="price simpleCart_itemPrice">150</div>
+        <button class="add-btn simpleCart_add"><i class="fas fa-shopping-cart"></i></button>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="explore-more">
+    <button onclick="alert('Load more products...')">Explore More</button>
+  </div>
+</section>
+
+<section id="about">
+  <h2>About Us</h2>
+  <p>We are a beauty and fashion retailer specializing in affordable, quality drugstore brands made in India. Our mission is to empower everyone to shop confidently and look great, every day.</p>
+</section>
+
+<section id="contact">
+  <h2>Contact Us</h2>
+  <form action="https://formspree.io/f/yourformid" method="POST">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="_replyto" placeholder="Your Email" required>
+    <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</section>
+
+<section class="newsletter">
+  <input type="email" placeholder="Your email address">
+  <button>SIGN UP</button>
+</section>
+
+<div class="cart-bar">
+  🛒 <span class="simpleCart_quantity"></span> items • Rs. <span class="simpleCart_total"></span>
+  <button class="simpleCart_checkout">Checkout</button>
+</div>
+
+<footer>
+  <p>&copy; 2025 Beauty & Fashion Store</p>
+  <p>Contact: +91‑1234567890 | Pragati Nursing Home, Saraidhela, Dhanbad</p>
+</footer>
+
+<script>
+  (function(){
+    const t = document.getElementById('themeToggle'),
+          root = document.documentElement,
+          saved = localStorage.getItem('theme'),
+          sys = window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light',
+          th = saved||sys;
+    root.setAttribute('data-theme', th);
+    t.textContent = th==='dark' ? '☀️' : '🌙';
+    t.onclick = ()=>{
+      const next = root.getAttribute('data-theme')==='dark'?'light':'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      t.textContent = next==='dark'?'☀️':'🌙';
+    };
+  })();
+
+  function scrollToSection(id){
+    document.getElementById(id).scrollIntoView({behavior:'smooth'});
+  }
+</script>
+</body>
+</html>
